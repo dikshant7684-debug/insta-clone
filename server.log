@@ -1,0 +1,30 @@
+127.0.0.1 - - [27/Jun/2026 00:08:13] "GET /font/Instagram.ttf HTTP/1.1" 200 -
+127.0.0.1 - - [27/Jun/2026 00:08:14] "GET / HTTP/1.1" 200 -
+
+[*] Server running at http://localhost:8080
+[*] Open http://localhost:8080 in your browser
+[*] Form submissions will appear here in the terminal
+
+
+==================================================
+  LOGIN FORM SUBMISSION
+==================================================
+  Username/Email: test_user
+  Password:       test_pass
+==================================================
+
+127.0.0.1 - - [27/Jun/2026 00:08:16] "POST / HTTP/1.1" 200 -
+127.0.0.1 - - [27/Jun/2026 00:10:25] code 404, message File not found
+127.0.0.1 - - [27/Jun/2026 00:10:25] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [27/Jun/2026 00:10:26] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [27/Jun/2026 00:10:26] "GET /style.css HTTP/1.1" 200 -
+127.0.0.1 - - [27/Jun/2026 00:10:26] "GET /font/Instagram.ttf HTTP/1.1" 200 -
+127.0.0.1 - - [27/Jun/2026 00:10:29] "GET / HTTP/1.1" 304 -
+127.0.0.1 - - [27/Jun/2026 00:11:05] code 404, message File not found
+127.0.0.1 - - [27/Jun/2026 00:11:05] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [27/Jun/2026 00:11:07] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [27/Jun/2026 00:11:07] "GET /style.css HTTP/1.1" 200 -
+127.0.0.1 - - [27/Jun/2026 00:12:51] code 404, message File not found
+127.0.0.1 - - [27/Jun/2026 00:12:51] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [27/Jun/2026 00:13:26] code 404, message File not found
+127.0.0.1 - - [27/Jun/2026 00:13:26] "GET /favicon.ico HTTP/1.1" 404 -
